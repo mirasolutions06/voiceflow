@@ -42,6 +42,7 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const mimeTypeRef = useRef<string>("");
   const resolveStopRef = useRef<((blob: Blob) => void) | null>(null);
+  const wakeLockRef = useRef<WakeLockSentinel | null>(null);
 
   const clearTimer = useCallback(() => {
     if (timerRef.current) {
@@ -56,6 +57,8 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
     streamRef.current = null;
     audioContextRef.current = null;
     setAnalyserNode(null);
+    wakeLockRef.current?.release().catch(() => {});
+    wakeLockRef.current = null;
   }, []);
 
   const reset = useCallback(() => {
@@ -103,6 +106,13 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
 
       recorder.start(100); // collect chunks every 100ms
       setState("recording");
+
+      // Keep screen awake during recording
+      if ("wakeLock" in navigator) {
+        navigator.wakeLock.request("screen").then((lock) => {
+          wakeLockRef.current = lock;
+        }).catch(() => {}); // Silently fail if not supported
+      }
 
       // Start timer
       setDuration(0);
