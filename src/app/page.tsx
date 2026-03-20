@@ -5,23 +5,28 @@ import { NoteHistory } from "@/components/NoteHistory";
 
 export default function Home() {
   return (
-    <div className="flex min-h-dvh flex-col bg-[#0a0a0a]">
-      {/* Desktop: subtle side borders to frame the mobile column */}
-      <div className="mx-auto flex w-full max-w-md flex-1 flex-col border-x border-white/[0.04] px-5 pt-14 pb-10">
-        {/* Header */}
-        <p className="mb-12 text-center font-mono text-[11px] tracking-[0.3em] text-white/30 uppercase">
+    <div className="min-h-dvh bg-[#0a0a0a]">
+      {/* Header */}
+      <header className="flex items-center justify-center pt-12">
+        <p className="font-mono text-[11px] tracking-[0.3em] text-white/25 uppercase">
           VoiceFlow
         </p>
+      </header>
 
-        {/* Recorder */}
-        <div className="flex flex-col items-center">
-          <VoiceRecorder />
+      {/* Hero — recorder centered in upper portion of screen */}
+      <div className="flex min-h-[62dvh] flex-col items-center justify-center px-6">
+        <VoiceRecorder />
+      </div>
+
+      {/* History zone */}
+      <div className="px-5 pb-12">
+        <div className="mb-5 flex items-center gap-3">
+          <div className="h-px flex-1 bg-white/[0.06]" />
+          <span className="font-mono text-[10px] tracking-[0.25em] text-white/25 uppercase">
+            Recent
+          </span>
+          <div className="h-px flex-1 bg-white/[0.06]" />
         </div>
-
-        {/* Divider */}
-        <div className="my-8 h-px w-full bg-white/[0.06]" />
-
-        {/* Note history */}
         <NoteHistory />
       </div>
     </div>

@@ -81,7 +81,7 @@ export function TranscriptEditor({ draft, onClose, onSaved }: TranscriptEditorPr
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="fixed inset-x-0 bottom-0 z-50 max-h-[90dvh] overflow-y-auto rounded-t-[28px] border-t border-white/[0.08] bg-[#1a1a1a] px-6 pb-10 pt-4"
+        className="fixed inset-x-0 bottom-0 z-50 max-h-[90dvh] overflow-y-auto rounded-t-[28px] border-t border-white/[0.08] bg-[#0a0a0a] px-6 pb-10 pt-4"
       >
         {/* Drag handle */}
         <div className="mx-auto mb-6 h-1 w-10 rounded-full bg-white/20" />
@@ -161,7 +161,7 @@ export function TranscriptEditor({ draft, onClose, onSaved }: TranscriptEditorPr
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="fixed left-1/2 top-6 z-[60] -translate-x-1/2 rounded-full border border-white/10 bg-[#1a1a1a] px-4 py-2 text-xs text-white/80 shadow-lg"
+          className="fixed left-1/2 top-6 z-[60] -translate-x-1/2 rounded-full border border-white/10 bg-[#0a0a0a] px-4 py-2 text-xs text-white/80 shadow-lg"
         >
           {toast}
         </motion.div>

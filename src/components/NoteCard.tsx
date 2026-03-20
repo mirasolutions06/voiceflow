@@ -15,7 +15,7 @@ export function NoteCard({ note }: { note: Note }) {
     <motion.div
       layout
       onClick={() => setExpanded((e) => !e)}
-      className="cursor-pointer rounded-[20px] border border-white/[0.08] bg-white/[0.06] p-5 backdrop-blur-xl transition-colors hover:bg-white/[0.08]"
+      className="cursor-pointer rounded-2xl border border-white/[0.07] bg-white/[0.04] p-5 transition-colors hover:bg-white/[0.06]"
     >
       <div className="flex items-start justify-between gap-2">
         <StatusBadge status={note.status} />
@@ -24,7 +24,7 @@ export function NoteCard({ note }: { note: Note }) {
         </span>
       </div>
 
-      <p className="mt-2 text-sm font-medium leading-snug text-white/80">
+      <p className="mt-2 text-sm font-medium leading-snug text-white">
         {note.title}
       </p>
 
@@ -39,7 +39,7 @@ export function NoteCard({ note }: { note: Note }) {
           {note.tags.map((tag) => (
             <span
               key={tag}
-              className="rounded-full bg-white/[0.06] px-2 py-0.5 font-mono text-[10px] text-white/40"
+              className="rounded-full border border-white/[0.12] px-2 py-0.5 font-mono text-[10px] text-white/35"
             >
               #{tag}
             </span>
