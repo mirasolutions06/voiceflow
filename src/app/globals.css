@@ -25,13 +25,7 @@
   --color-sage: var(--sage);
   --color-clay: var(--clay);
   --font-sans: var(--font-space-grotesk);
-  --font-mono: var(--font-fragment-mono);
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  --font-mono: var(--font-geist-mono);
 }
 
 /* Lock the app to a single viewport — no page scroll, like a native app */
@@ -61,7 +55,7 @@ button {
 
 /* Editorial kicker — mono, tracked, uppercase */
 .kicker {
-  font-family: var(--font-fragment-mono), ui-monospace, monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-size: 11px;

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import { Search } from "lucide-react";
 import { NoteCard } from "./NoteCard";
 import { stagger, fadeInUp } from "@/lib/animations";
 import { useNotes } from "@/hooks/useNotes";
@@ -17,9 +18,9 @@ const statusOptions: Array<"All" | NoteStatus> = [
 ];
 
 const chipBase =
-  "shrink-0 rounded-md border px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-wider transition-colors";
-const chipActive = "border-ember/40 bg-ember/12 text-ember";
-const chipIdle = "border-bone/10 bg-bone/[0.03] text-bone/50";
+  "shrink-0 rounded-md px-3 py-1.5 text-[11px] font-medium uppercase tracking-wide transition-colors";
+const chipActive = "bg-ember/20 text-ember";
+const chipIdle = "bg-bone/[0.05] text-bone/55";
 
 export function NoteHistory() {
   const { notes, isLoading, error } = useNotes();
@@ -83,13 +84,16 @@ export function NoteHistory() {
   return (
     <div className="mt-1">
       <div className="mb-4 space-y-3">
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search notes..."
-          className="min-h-11 w-full rounded-lg border border-bone/10 bg-elevated px-4 py-2.5 text-[15px] text-bone placeholder-bone/35 outline-none focus:border-ember/40"
-        />
+        <div className="relative">
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-bone/35" />
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search notes..."
+            className="min-h-11 w-full rounded-lg border border-bone/10 bg-elevated py-2.5 pl-10 pr-4 text-[15px] text-bone placeholder-bone/40 outline-none focus:border-ember/40"
+          />
+        </div>
 
         <div className="flex gap-1.5 overflow-x-auto pb-1">
           {statusOptions.map((option) => (
