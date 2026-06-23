@@ -5,6 +5,7 @@ import { motion, type PanInfo } from "framer-motion";
 import { ChevronUp } from "lucide-react";
 import { NoteHistory } from "./NoteHistory";
 import { LocalDraftQueue } from "./LocalDraftQueue";
+import { AppFooter } from "./AppFooter";
 import { useNotes } from "@/hooks/useNotes";
 import { useLocalDrafts } from "@/hooks/useLocalDrafts";
 
@@ -72,6 +73,7 @@ export function BottomSheet() {
         <div className="sheet-scroll min-h-0 flex-1 overflow-y-auto px-5 pb-[calc(env(safe-area-inset-bottom)_+_28px)]">
           <LocalDraftQueue />
           <NoteHistory />
+          <AppFooter />
         </div>
       </section>
     </>

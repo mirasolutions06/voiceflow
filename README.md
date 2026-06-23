@@ -2,11 +2,13 @@
 
 # VoiceFlow
 
-### Tap, talk, done — your voice, structured into Notion.
+### Tap, talk, done — your voice, structured into Notion and ready for your Brain.
 
 A voice-first Progressive Web App that turns spoken thoughts into clean, structured notes.
 Record on your phone, let Whisper transcribe and an LLM tidy it into a summary with
-action items, then sync it straight to Notion — all from a single, native-feeling screen.
+action items, then sync it straight to Notion. The same capture pipeline can also hand
+notes into an Obsidian Brain, arranging thoughts into linked notes, tasks, references,
+and resurfaced ideas — all from a single, native-feeling screen.
 
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=next.js&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-20232a?logo=react&logoColor=61dafb)](https://react.dev/)
@@ -33,7 +35,9 @@ Capturing a thought on the move usually means stopping to type. **VoiceFlow** re
 friction: open the app, tap once, talk. The recording is saved locally first (so nothing is
 ever lost), transcribed with **OpenAI Whisper**, cleaned up by an LLM into a title, summary,
 action items and tags, and then synced to a **Notion** database where it becomes part of an
-automated workflow.
+automated workflow. It is designed so Obsidian can be added as a second destination:
+voice notes can become linked markdown notes, tasks, project references, and durable
+thought trails in your personal Brain.
 
 The UI is deliberately built to feel like a *real* app, not a web page: one locked screen with
 the record button as the hero and a pull-up sheet for history — no page scroll, safe-area aware,
@@ -46,6 +50,7 @@ installable to the home screen.
 - ✍️ **Whisper transcription** — audio is sent to OpenAI Whisper for accurate speech-to-text.
 - 🤖 **AI cleanup** — an LLM pass turns the raw transcript into a title, summary, action items, decisions and follow-ups.
 - 🗂️ **Notion sync** — reviewed notes are written to a Notion database with status, tags and duration; the app re-polls to reflect downstream processing.
+- 🧠 **Obsidian Brain-ready** — the capture model can route cleaned notes into an Obsidian vault to arrange thoughts, link related ideas, and surface tasks later.
 - 📱 **Installable PWA** — single-screen app shell, pull-up notes sheet, hand-authored service worker, add-to-home-screen.
 - 🔁 **Queue contract** — notes land as `Status = New` for a downstream personal-assistant agent to pick up FIFO, process, and mark `Done`.
 
@@ -59,6 +64,7 @@ flowchart LR
     D --> E["/api/process-transcript<br/>LLM cleanup"]
     E --> F["Review &amp; edit"]
     F --> G["/api/notion"]
+    F -. optional .-> O[("Obsidian Brain<br/>linked markdown notes")]
     G --> H[("Notion database")]
     H --> I["Downstream PA<br/>polls Status = New"]
     I -->|writes summary, sets Done| H
@@ -70,7 +76,8 @@ flowchart LR
 3. **Process** → `/api/process-transcript` runs an LLM pass for a clean title, summary, action items and tags.
 4. **Review** → you confirm/edit in a bottom-sheet editor.
 5. **Sync** → `/api/notion` creates the Notion page (transcript as the body, metadata as properties).
-6. **Hand-off** → a downstream assistant reads `Status = New` notes, processes them, and writes results back — the app reflects status changes on its next poll.
+6. **Brain hand-off** → the same reviewed artifact can be routed into Obsidian as linked markdown for thoughts, tasks, projects and resurfacing.
+7. **Assistant hand-off** → a downstream assistant reads `Status = New` notes, processes them, and writes results back — the app reflects status changes on its next poll.
 
 ## Tech stack
 
@@ -79,7 +86,7 @@ flowchart LR
 | Framework | Next.js 16 (App Router), React 19, TypeScript |
 | Styling | Tailwind CSS v4, Framer Motion |
 | AI | OpenAI Whisper (speech-to-text) + LLM transcript cleanup |
-| Data | Notion SDK v5 (`dataSources` API), SWR |
+| Data | Notion SDK v5 (`dataSources` API), SWR; Obsidian Brain-ready markdown hand-off |
 | Offline | IndexedDB local drafts, hand-authored service worker, Wake Lock API |
 
 ## Engineering highlights
@@ -119,7 +126,7 @@ npm run dev                  # http://localhost:3000
 ### Notion setup
 
 1. Create an integration at <https://notion.so/my-integrations> (grant **Read** + **Insert** content).
-2. Create a database with these properties: `Name` (title), `Status` (select: New/Processing/Done/Archived), `RecordedAt` (date), `Tags` (multi-select), `Duration` (number), `MiraOutput` (rich text), `ActionItems` (rich text), `ProcessedAt` (date).
+2. Create a database with these properties: `Name` (title), `Status` (select: New/Processing/Processed/Done/Archived), `RecordedAt` (date), `Tags` (multi-select), `Duration` (number), `MiraOutput` (rich text), `ActionItems` (rich text), `ProcessedAt` (date).
 3. Share the database with your integration, then copy its ID into `NOTION_DATABASE_ID`.
 
 > Mobile recording needs HTTPS — test via a tunnel (e.g. ngrok) or a deployment.
@@ -142,7 +149,16 @@ src/
 
 [MIT](LICENSE)
 
+### Obsidian Brain path
+
+Obsidian does not need to replace Notion. It can sit beside it as the long-term thinking
+layer: VoiceFlow captures the raw thought, the LLM cleans it, and an Obsidian adapter can
+write markdown notes with backlinks, tags, tasks, project links, and resurfacing metadata.
+That turns fast voice capture into an arranged personal knowledge base instead of a pile
+of transcripts.
+
 ## Author
 
 **Mira Solutions** · [@mirasolutions06](https://github.com/mirasolutions06)
-<!-- TODO: swap in your preferred display name and add LinkedIn / portfolio / contact links -->
+
+**mj**
