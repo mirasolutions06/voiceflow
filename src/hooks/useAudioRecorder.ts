@@ -8,6 +8,8 @@ interface UseAudioRecorderReturn {
   duration: number;
   analyserNode: AnalyserNode | null;
   startRecording: () => Promise<void>;
+  pauseRecording: () => void;
+  resumeRecording: () => void;
   stopRecording: () => Promise<Blob | null>;
   error: string | null;
   reset: () => void;
@@ -50,6 +52,13 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
       timerRef.current = null;
     }
   }, []);
+
+  const startTimer = useCallback(() => {
+    clearTimer();
+    timerRef.current = setInterval(() => {
+      setDuration((d) => d + 1);
+    }, 1000);
+  }, [clearTimer]);
 
   const cleanupAudio = useCallback(() => {
     streamRef.current?.getTracks().forEach((t) => t.stop());
@@ -114,20 +123,31 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
         }).catch(() => {}); // Silently fail if not supported
       }
 
-      // Start timer
       setDuration(0);
-      timerRef.current = setInterval(() => {
-        setDuration((d) => d + 1);
-      }, 1000);
+      startTimer();
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Microphone access denied";
       setError(msg);
       setState("error");
     }
-  }, []);
+  }, [startTimer]);
+
+  const pauseRecording = useCallback(() => {
+    if (!mediaRecorderRef.current || state !== "recording") return;
+    mediaRecorderRef.current.pause();
+    clearTimer();
+    setState("paused");
+  }, [state, clearTimer]);
+
+  const resumeRecording = useCallback(() => {
+    if (!mediaRecorderRef.current || state !== "paused") return;
+    mediaRecorderRef.current.resume();
+    startTimer();
+    setState("recording");
+  }, [state, startTimer]);
 
   const stopRecording = useCallback(async (): Promise<Blob | null> => {
-    if (!mediaRecorderRef.current || state !== "recording") return null;
+    if (!mediaRecorderRef.current || (state !== "recording" && state !== "paused")) return null;
 
     clearTimer();
     setState("processing");
@@ -147,5 +167,15 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
     };
   }, [clearTimer, cleanupAudio]);
 
-  return { state, duration, analyserNode, startRecording, stopRecording, error, reset };
+  return {
+    state,
+    duration,
+    analyserNode,
+    startRecording,
+    pauseRecording,
+    resumeRecording,
+    stopRecording,
+    error,
+    reset,
+  };
 }

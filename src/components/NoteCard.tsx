@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { StatusBadge } from "./StatusBadge";
 import { formatDate } from "@/lib/utils";
@@ -8,8 +8,6 @@ import type { Note } from "@/types";
 
 export function NoteCard({ note }: { note: Note }) {
   const [expanded, setExpanded] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
 
   return (
     <motion.div
@@ -19,8 +17,8 @@ export function NoteCard({ note }: { note: Note }) {
     >
       <div className="flex items-start justify-between gap-2">
         <StatusBadge status={note.status} />
-        <span className="font-mono text-[11px] text-white/35">
-          {mounted ? formatDate(note.recordedAt) : ""}
+        <span className="font-mono text-[11px] text-white/35" suppressHydrationWarning>
+          {formatDate(note.recordedAt)}
         </span>
       </div>
 

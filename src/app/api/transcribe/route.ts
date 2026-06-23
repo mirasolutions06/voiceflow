@@ -5,7 +5,12 @@ import { getOpenAI } from "@/lib/openai";
 import { toFile } from "openai";
 
 export async function POST(request: Request) {
+  const startedAt = Date.now();
   try {
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json({ error: "OPENAI_API_KEY is not configured" }, { status: 500 });
+    }
+
     const formData = await request.formData();
     const audioBlob = formData.get("audio") as Blob | null;
 
@@ -15,6 +20,10 @@ export async function POST(request: Request) {
 
     if (audioBlob.size > 25 * 1024 * 1024) {
       return NextResponse.json({ error: "Audio too large (max 25MB)" }, { status: 413 });
+    }
+
+    if (audioBlob.size === 0) {
+      return NextResponse.json({ error: "Audio is empty" }, { status: 400 });
     }
 
     const mimeType = audioBlob.type || "audio/webm";
@@ -28,6 +37,13 @@ export async function POST(request: Request) {
       file,
       model: "whisper-1",
       response_format: "text",
+    });
+
+    console.info("voiceflow.metric", {
+      event: "transcription_complete",
+      durationMs: Date.now() - startedAt,
+      audioBytes: audioBlob.size,
+      mimeType,
     });
 
     return NextResponse.json({ transcript: transcription });

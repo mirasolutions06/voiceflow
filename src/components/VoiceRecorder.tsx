@@ -2,54 +2,68 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Mic, Pause, Play, Square } from "lucide-react";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 import { WaveformVisualizer } from "./WaveformVisualizer";
 import { TranscriptEditor } from "./TranscriptEditor";
 import { formatDuration, generateTitle } from "@/lib/utils";
+import { createLocalDraft, saveLocalDraft } from "@/lib/localDrafts";
+import { runTranscriptPipeline, type PipelineStage } from "@/lib/transcriptionClient";
 import type { TranscriptDraft } from "@/types";
 
+const pipelineSteps: Array<{ key: PipelineStage; label: string }> = [
+  { key: "saved", label: "Saved" },
+  { key: "transcribing", label: "Transcribing" },
+  { key: "cleaning", label: "Cleaning" },
+  { key: "ready", label: "Ready" },
+];
+
 export function VoiceRecorder() {
-  const { state, duration, analyserNode, startRecording, stopRecording, error, reset } =
-    useAudioRecorder();
+  const {
+    state,
+    duration,
+    analyserNode,
+    startRecording,
+    pauseRecording,
+    resumeRecording,
+    stopRecording,
+    error,
+    reset,
+  } = useAudioRecorder();
   const [draft, setDraft] = useState<TranscriptDraft | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [pipelineStage, setPipelineStage] = useState<PipelineStage | null>(null);
 
   const handleButtonClick = async () => {
     if (state === "idle" || state === "error") {
+      setNotice(null);
+      setPipelineStage(null);
       await startRecording();
-    } else if (state === "recording") {
+    } else if (state === "recording" || state === "paused") {
       const blob = await stopRecording();
       if (!blob) return;
-      await transcribeBlob(blob, duration);
+      await prepareDraft(blob, duration);
     }
   };
 
-  const transcribeBlob = async (blob: Blob, dur: number) => {
-    const formData = new FormData();
-    formData.append("audio", blob);
-
+  const prepareDraft = async (blob: Blob, dur: number) => {
+    const localDraft = createLocalDraft(blob, generateTitle(), dur);
+    await saveLocalDraft(localDraft);
+    setPipelineStage("saved");
+    setNotice("Recording saved locally");
     try {
-      const res = await fetch("/api/transcribe", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-
-      if (data.transcript) {
-        setDraft({
-          title: generateTitle(),
-          transcript: data.transcript,
-          tags: [],
-          duration: dur,
-        });
-      } else {
-        reset();
-      }
-    } catch {
+      const readyDraft = await runTranscriptPipeline(localDraft, setPipelineStage);
+      setDraft(readyDraft);
+      setNotice(null);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Transcription failed";
+      setNotice(`${message}. Your recording is still saved below.`);
       reset();
     }
   };
 
   const isRecording = state === "recording";
+  const isPaused = state === "paused";
   const isProcessing = state === "processing";
   const isIdle = state === "idle" || state === "error";
 
@@ -93,7 +107,7 @@ export function VoiceRecorder() {
             disabled={isProcessing}
             whileTap={{ scale: 0.94 }}
             className="relative z-10 flex h-52 w-52 items-center justify-center rounded-full bg-white shadow-[0_0_60px_rgba(255,255,255,0.08)] disabled:cursor-not-allowed disabled:opacity-70"
-            aria-label={isRecording ? "Stop recording" : "Start recording"}
+            aria-label={isRecording || isPaused ? "Stop recording" : "Start recording"}
           >
             <AnimatePresence mode="wait">
               {isProcessing ? (
@@ -118,7 +132,7 @@ export function VoiceRecorder() {
                     />
                   ))}
                 </motion.span>
-              ) : isRecording ? (
+              ) : isRecording || isPaused ? (
                 <motion.span
                   key="stop"
                   initial={{ opacity: 0, scale: 0.7 }}
@@ -126,7 +140,7 @@ export function VoiceRecorder() {
                   exit={{ opacity: 0, scale: 0.7 }}
                 >
                   {/* Stop square */}
-                  <span className="block h-6 w-6 rounded-[4px] bg-black/70" />
+                  <Square className="h-8 w-8 fill-black/70 text-black/70" strokeWidth={1.5} />
                 </motion.span>
               ) : (
                 <motion.span
@@ -135,22 +149,7 @@ export function VoiceRecorder() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
                 >
-                  {/* Mic icon */}
-                  <svg
-                    width="32"
-                    height="32"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="rgba(0,0,0,0.5)"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <rect x="9" y="2" width="6" height="12" rx="3" />
-                    <path d="M5 10a7 7 0 0 0 14 0" />
-                    <line x1="12" y1="19" x2="12" y2="22" />
-                    <line x1="9" y1="22" x2="15" y2="22" />
-                  </svg>
+                  <Mic className="h-9 w-9 text-black/50" strokeWidth={1.5} />
                 </motion.span>
               )}
             </AnimatePresence>
@@ -169,15 +168,15 @@ export function VoiceRecorder() {
             >
               Transcribing
             </motion.p>
-          ) : isRecording ? (
+          ) : isRecording || isPaused ? (
             <motion.p
-              key="timer"
+              key={isPaused ? "paused" : "timer"}
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               className="font-mono text-sm tabular-nums text-white/50"
             >
-              {formatDuration(duration)}
+              {isPaused ? `Paused at ${formatDuration(duration)}` : formatDuration(duration)}
             </motion.p>
           ) : (
             <motion.p
@@ -188,6 +187,87 @@ export function VoiceRecorder() {
               className="font-mono text-xs tracking-widest text-white/30 uppercase"
             >
               {error ? "Mic access denied" : "Tap to record"}
+            </motion.p>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {(isRecording || isPaused) && (
+            <motion.div
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              className="flex items-center gap-3"
+            >
+              <button
+                onClick={isPaused ? resumeRecording : pauseRecording}
+                className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/10 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-white/45 transition-colors hover:border-white/20 hover:text-white/70"
+              >
+                {isPaused ? <Play className="h-3.5 w-3.5" /> : <Pause className="h-3.5 w-3.5" />}
+                {isPaused ? "Resume" : "Pause"}
+              </button>
+              {isPaused && (
+                <button
+                  onClick={handleButtonClick}
+                  className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/10 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-white/45 transition-colors hover:border-white/20 hover:text-white/70"
+                >
+                  <Square className="h-3.5 w-3.5 fill-current" />
+                  Finish
+                </button>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {pipelineStage && !isRecording && !isPaused && (
+            <motion.div
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              className="w-full max-w-[340px]"
+            >
+              <div className="grid grid-cols-4 gap-1.5">
+                {pipelineSteps.map((step) => {
+                  const currentIndex = pipelineSteps.findIndex((item) => item.key === pipelineStage);
+                  const stepIndex = pipelineSteps.findIndex((item) => item.key === step.key);
+                  const isActive = step.key === pipelineStage;
+                  const isDone = currentIndex > stepIndex;
+
+                  return (
+                    <div
+                      key={step.key}
+                      className={`rounded-full border px-2 py-1.5 text-center font-mono text-[9px] uppercase tracking-wider ${
+                        isDone
+                          ? "border-green-300/20 bg-green-300/10 text-green-200/60"
+                          : isActive
+                            ? "border-white/20 bg-white/10 text-white/70"
+                            : "border-white/[0.07] bg-white/[0.02] text-white/22"
+                      }`}
+                    >
+                      {step.label}
+                    </div>
+                  );
+                })}
+              </div>
+              {notice && (
+                <p className="mt-3 text-center text-xs leading-relaxed text-white/40">
+                  {notice}
+                </p>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {notice && !pipelineStage && (
+            <motion.p
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              className="max-w-[280px] text-center text-xs leading-relaxed text-white/40"
+            >
+              {notice}
             </motion.p>
           )}
         </AnimatePresence>
@@ -212,8 +292,8 @@ export function VoiceRecorder() {
         {draft && (
           <TranscriptEditor
             draft={draft}
-            onClose={() => { setDraft(null); reset(); }}
-            onSaved={() => { setDraft(null); reset(); }}
+            onClose={() => { setDraft(null); setPipelineStage(null); reset(); }}
+            onSaved={() => { setDraft(null); setPipelineStage(null); reset(); }}
           />
         )}
       </AnimatePresence>
