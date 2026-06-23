@@ -144,5 +144,5 @@ src/
 
 ## Author
 
-**[Your Name]** · [@mirasolutions06](https://github.com/mirasolutions06)
-<!-- TODO: add LinkedIn / portfolio / contact, and replace [Your Name] above -->
+**Mira Solutions** · [@mirasolutions06](https://github.com/mirasolutions06)
+<!-- TODO: swap in your preferred display name and add LinkedIn / portfolio / contact links -->
