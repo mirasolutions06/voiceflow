@@ -160,5 +160,3 @@ of transcripts.
 ## Author
 
 **Mira Solutions** · [@mirasolutions06](https://github.com/mirasolutions06)
-
-**mj**
