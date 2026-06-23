@@ -101,12 +101,16 @@ export function VoiceRecorder() {
             )}
           </AnimatePresence>
 
-          {/* Main circle button — warm bone */}
+          {/* Main circle button — dark disc, orange ring (idle) / solid orange (recording) */}
           <motion.button
             onClick={handleButtonClick}
             disabled={isProcessing}
             whileTap={{ scale: 0.94 }}
-            className="relative z-10 flex h-52 w-52 items-center justify-center rounded-full bg-bone shadow-[0_0_70px_rgba(229,163,61,0.12)] disabled:cursor-not-allowed disabled:opacity-70"
+            className={`relative z-10 flex h-52 w-52 items-center justify-center rounded-full shadow-[0_0_80px_rgba(238,154,60,0.16)] disabled:cursor-not-allowed disabled:opacity-70 ${
+              isRecording || isPaused
+                ? "bg-ember"
+                : "bg-elevated ring-2 ring-ember/55"
+            }`}
             aria-label={isRecording || isPaused ? "Stop recording" : "Start recording"}
           >
             <AnimatePresence mode="wait">
@@ -121,7 +125,7 @@ export function VoiceRecorder() {
                   {[0, 1, 2].map((i) => (
                     <motion.span
                       key={i}
-                      className="inline-block h-2 w-2 rounded-full bg-base/40"
+                      className="inline-block h-2 w-2 rounded-full bg-ember/70"
                       animate={{ opacity: [0.2, 0.8, 0.2] }}
                       transition={{
                         duration: 1.2,
@@ -140,7 +144,7 @@ export function VoiceRecorder() {
                   exit={{ opacity: 0, scale: 0.7 }}
                 >
                   {/* Stop square */}
-                  <Square className="h-8 w-8 fill-base/70 text-base/70" strokeWidth={1.5} />
+                  <Square className="h-7 w-7 fill-base text-base" strokeWidth={1.5} />
                 </motion.span>
               ) : (
                 <motion.span
@@ -149,7 +153,7 @@ export function VoiceRecorder() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
                 >
-                  <Mic className="h-9 w-9 text-base/55" strokeWidth={1.5} />
+                  <Mic className="h-9 w-9 text-ember" strokeWidth={1.5} />
                 </motion.span>
               )}
             </AnimatePresence>

@@ -1,10 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Inter_Tight, Fragment_Mono } from "next/font/google";
+import { Space_Grotesk, Fragment_Mono } from "next/font/google";
 import { ServiceWorker } from "@/components/ServiceWorker";
 import "./globals.css";
 
-const interTight = Inter_Tight({
-  variable: "--font-inter-tight",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
   display: "swap",
   weight: ["400", "500", "600", "700"],
@@ -48,12 +48,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${interTight.variable} ${fragmentMono.variable} h-full`}
+      className={`${spaceGrotesk.variable} ${fragmentMono.variable} h-full`}
     >
       <head>
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
       </head>
-      <body className="grain h-full" suppressHydrationWarning>
+      <body className="h-full" suppressHydrationWarning>
         {children}
         <ServiceWorker />
       </body>

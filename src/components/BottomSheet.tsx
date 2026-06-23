@@ -50,8 +50,8 @@ export function BottomSheet() {
           <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-bone/20" />
           <div className="flex items-center justify-between">
             <div className="flex items-baseline gap-2">
-              <span className="kicker text-bone/50">Recent</span>
-              <span className="font-mono text-[11px] text-bone/30">{noteCount}</span>
+              <span className="kicker text-bone/70">Recent</span>
+              <span className="font-mono text-[11px] text-bone/45">{noteCount}</span>
               {draftCount > 0 && (
                 <span className="rounded-full bg-ember/12 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-ember">
                   {draftCount} draft{draftCount === 1 ? "" : "s"}
@@ -61,7 +61,7 @@ export function BottomSheet() {
             <motion.span
               animate={{ rotate: expanded ? 180 : 0 }}
               transition={{ duration: 0.3, ease: [0.22, 0.61, 0.36, 1] }}
-              className="text-bone/40"
+              className="text-bone/55"
             >
               <ChevronUp className="h-5 w-5" />
             </motion.span>

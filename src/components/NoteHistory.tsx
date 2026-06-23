@@ -16,6 +16,11 @@ const statusOptions: Array<"All" | NoteStatus> = [
   "Archived",
 ];
 
+const chipBase =
+  "shrink-0 rounded-md border px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-wider transition-colors";
+const chipActive = "border-ember/40 bg-ember/12 text-ember";
+const chipIdle = "border-bone/10 bg-bone/[0.03] text-bone/50";
+
 export function NoteHistory() {
   const { notes, isLoading, error } = useNotes();
   const [query, setQuery] = useState("");
@@ -51,12 +56,9 @@ export function NoteHistory() {
 
   if (isLoading) {
     return (
-      <div className="mt-8 space-y-3">
+      <div className="mt-4 space-y-3">
         {[1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className="h-20 animate-pulse rounded-[20px] bg-bone/[0.04]"
-          />
+          <div key={i} className="h-16 animate-pulse rounded-lg bg-bone/[0.04]" />
         ))}
       </div>
     );
@@ -64,7 +66,7 @@ export function NoteHistory() {
 
   if (error) {
     return (
-      <p className="mt-8 text-center font-mono text-xs text-bone/30">
+      <p className="mt-8 text-center font-mono text-xs text-bone/45">
         Could not load notes
       </p>
     );
@@ -72,57 +74,40 @@ export function NoteHistory() {
 
   if (notes.length === 0) {
     return (
-      <p className="mt-8 text-center font-mono text-xs text-bone/25">
+      <p className="mt-8 text-center font-mono text-xs text-bone/40">
         No notes yet — record your first
       </p>
     );
   }
 
   return (
-    <div className="mt-6">
+    <div className="mt-1">
       <div className="mb-4 space-y-3">
-        <div className="flex items-center justify-between gap-3">
-          <p className="text-[11px] font-medium uppercase tracking-wider text-bone/30">
-            Recent Notes
-          </p>
-          <span className="font-mono text-[10px] text-bone/25">
-            {filteredNotes.length}/{notes.length}
-          </span>
-        </div>
-
         <input
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search notes..."
-          className="min-h-12 w-full rounded-xl border border-bone/[0.08] bg-bone/[0.04] px-4 py-3 text-base text-bone placeholder-bone/25 outline-none focus:border-bone/20"
+          className="min-h-11 w-full rounded-lg border border-bone/10 bg-elevated px-4 py-2.5 text-[15px] text-bone placeholder-bone/35 outline-none focus:border-ember/40"
         />
 
-        <div className="flex gap-2 overflow-x-auto pb-1">
-            {statusOptions.map((option) => (
+        <div className="flex gap-1.5 overflow-x-auto pb-1">
+          {statusOptions.map((option) => (
             <button
               key={option}
               onClick={() => setStatus(option)}
-              className={`min-h-11 min-w-11 shrink-0 rounded-full border px-4 py-2 font-mono text-[10px] uppercase tracking-wider ${
-                status === option
-                  ? "border-bone/20 bg-bone/12 text-bone/75"
-                  : "border-bone/[0.08] bg-bone/[0.03] text-bone/32"
-              }`}
+              className={`${chipBase} ${status === option ? chipActive : chipIdle}`}
             >
-                {option}
+              {option}
             </button>
-            ))}
+          ))}
         </div>
 
         {tags.length > 0 && (
-          <div className="flex gap-2 overflow-x-auto pb-1">
+          <div className="flex gap-1.5 overflow-x-auto pb-1">
             <button
               onClick={() => setTag("All")}
-              className={`min-h-11 min-w-11 shrink-0 rounded-full border px-4 py-2 font-mono text-[10px] uppercase tracking-wider ${
-                tag === "All"
-                  ? "border-bone/20 bg-bone/12 text-bone/75"
-                  : "border-bone/[0.08] bg-bone/[0.03] text-bone/32"
-              }`}
+              className={`${chipBase} ${tag === "All" ? chipActive : chipIdle}`}
             >
               All tags
             </button>
@@ -130,11 +115,7 @@ export function NoteHistory() {
               <button
                 key={item}
                 onClick={() => setTag(item)}
-                className={`min-h-11 min-w-11 shrink-0 rounded-full border px-4 py-2 font-mono text-[10px] ${
-                  tag === item
-                    ? "border-bone/20 bg-bone/12 text-bone/75"
-                    : "border-bone/[0.08] bg-bone/[0.03] text-bone/32"
-                }`}
+                className={`${chipBase} ${tag === item ? chipActive : chipIdle}`}
               >
                 #{item}
               </button>
@@ -144,17 +125,12 @@ export function NoteHistory() {
       </div>
 
       {filteredNotes.length === 0 && (
-        <p className="mt-8 text-center font-mono text-xs text-bone/25">
+        <p className="mt-8 text-center font-mono text-xs text-bone/40">
           No matching notes
         </p>
       )}
 
-      <motion.div
-        variants={stagger}
-        initial="hidden"
-        animate="visible"
-        className="space-y-3"
-      >
+      <motion.div variants={stagger} initial="hidden" animate="visible">
         {filteredNotes.map((note) => (
           <motion.div key={note.id} variants={fadeInUp}>
             <NoteCard note={note} />

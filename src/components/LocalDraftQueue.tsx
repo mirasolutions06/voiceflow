@@ -88,27 +88,25 @@ export function LocalDraftQueue() {
 
   return (
     <>
-      <section className="mx-auto mt-8 w-full max-w-xl">
+      <section className="mx-auto mt-2 w-full max-w-xl">
         <div className="mb-3 flex items-center justify-between">
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-bone/25">
-            Draft Inbox
-          </p>
-          <span className="font-mono text-[10px] text-bone/25">
+          <p className="kicker text-ember/70">Draft Inbox</p>
+          <span className="font-mono text-[10px] text-bone/45">
             {unsynced.length}
           </span>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {unsynced.map((draft) => (
             <motion.div
               key={draft.id}
               layout
-              className="rounded-2xl border border-bone/[0.07] bg-bone/[0.04] p-4"
+              className="rounded-xl border border-bone/[0.09] bg-elevated p-4"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-bone/85">{draft.title}</p>
-                  <p className="mt-1 font-mono text-[11px] text-bone/30">
+                  <p className="text-sm font-medium text-bone/90">{draft.title}</p>
+                  <p className="mt-1 font-mono text-[11px] text-bone/45">
                     {formatDate(draft.recordedAt)} / {formatDuration(draft.duration)}
                   </p>
                 </div>
