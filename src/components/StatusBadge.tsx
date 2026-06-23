@@ -3,17 +3,17 @@
 import type { NoteStatus } from "@/types";
 
 const styles: Record<NoteStatus, string> = {
-  New: "bg-blue-500/20 text-blue-300 border-blue-500/30",
-  Processing: "bg-amber-500/20 text-amber-300 border-amber-500/30",
-  Processed: "bg-violet-500/20 text-violet-200 border-violet-500/30",
-  Done: "bg-green-500/20 text-green-300 border-green-500/30",
-  Archived: "bg-white/10 text-white/40 border-white/10",
+  New: "bg-ember/12 text-ember border-ember/25",
+  Processing: "bg-ember/12 text-ember border-ember/25",
+  Processed: "bg-sage/12 text-sage border-sage/25",
+  Done: "bg-sage/12 text-sage border-sage/25",
+  Archived: "bg-bone/[0.06] text-bone/40 border-bone/10",
 };
 
 export function StatusBadge({ status }: { status: NoteStatus }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-2 py-0.5 font-mono text-[10px] leading-none ${styles[status]}`}
+      className={`inline-flex items-center rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase leading-none tracking-wider ${styles[status]}`}
     >
       {status}
     </span>

@@ -1,20 +1,30 @@
 @import "tailwindcss";
 
 :root {
-  --bg-dark: #121212;
-  --bg-darker: #0a0a0a;
-  --bg-surface: #1a1a1a;
-  --text-light: #ffffff;
-  --accent-red: #ef4444;
+  /* Surfaces — warm espresso, not pure black */
+  --base: #15120e;
+  --surface: #1e1a14;
+  --elevated: #221d16;
+  /* Foreground — warm bone, not clinical white */
+  --bone: #f5f0e6;
+  /* One confident accent — ember (not red, not bottle green) */
+  --ember: #e5a33d;
+  --ember-deep: #c8842a;
+  /* Quiet secondaries */
+  --sage: #8fa77e;
+  --clay: #d87a52;
 }
 
 @theme inline {
-  --color-bg-dark: var(--bg-dark);
-  --color-bg-darker: var(--bg-darker);
-  --color-bg-surface: var(--bg-surface);
-  --color-text-light: var(--text-light);
-  --color-accent-red: var(--accent-red);
-  --font-sans: var(--font-inter);
+  --color-base: var(--base);
+  --color-surface: var(--surface);
+  --color-elevated: var(--elevated);
+  --color-bone: var(--bone);
+  --color-ember: var(--ember);
+  --color-ember-deep: var(--ember-deep);
+  --color-sage: var(--sage);
+  --color-clay: var(--clay);
+  --font-sans: var(--font-inter-tight);
   --font-mono: var(--font-fragment-mono);
 }
 
@@ -24,36 +34,65 @@
   box-sizing: border-box;
 }
 
+/* Lock the app to a single viewport — no page scroll, like a native app */
+html,
 body {
-  background: var(--bg-darker);
-  color: var(--text-light);
-  font-family: var(--font-inter), system-ui, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  height: 100%;
+  overflow: hidden;
   overscroll-behavior: none;
 }
 
+body {
+  background: var(--base);
+  color: var(--bone);
+  font-family: var(--font-inter-tight), system-ui, sans-serif;
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 ::selection {
-  background: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  background: color-mix(in srgb, var(--ember) 28%, transparent);
+  color: var(--bone);
 }
 
 button {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Editorial kicker — borrowed language, owned palette */
+.kicker {
+  font-family: var(--font-fragment-mono), ui-monospace, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 11px;
+}
+
+/* Internal scroll surfaces keep momentum but never bleed to the page */
+.sheet-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Warm paper grain — subtle, fixed over the espresso base */
 .grain::before {
   content: "";
   position: fixed;
-  top: -50%;
-  left: -50%;
-  right: -50%;
-  bottom: -50%;
+  inset: -50%;
   width: 200%;
   height: 200%;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.4;
+  opacity: 0.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

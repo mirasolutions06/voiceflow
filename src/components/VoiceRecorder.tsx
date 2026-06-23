@@ -77,7 +77,7 @@ export function VoiceRecorder() {
             {isIdle && (
               <motion.span
                 key="idle-pulse"
-                className="absolute rounded-full border border-white/15"
+                className="absolute rounded-full border border-ember/30"
                 initial={{ width: 208, height: 208, opacity: 0.5 }}
                 animate={{ width: 270, height: 270, opacity: 0 }}
                 transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut" }}
@@ -90,23 +90,23 @@ export function VoiceRecorder() {
             {isRecording && (
               <motion.span
                 key="rec-ring"
-                className="absolute rounded-full border border-white/20"
+                className="absolute rounded-full border border-ember/40"
                 animate={{
                   width: [208, 248, 208],
                   height: [208, 248, 208],
-                  opacity: [0.25, 0, 0.25],
+                  opacity: [0.35, 0, 0.35],
                 }}
                 transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
               />
             )}
           </AnimatePresence>
 
-          {/* Main circle button — always white */}
+          {/* Main circle button — warm bone */}
           <motion.button
             onClick={handleButtonClick}
             disabled={isProcessing}
             whileTap={{ scale: 0.94 }}
-            className="relative z-10 flex h-52 w-52 items-center justify-center rounded-full bg-white shadow-[0_0_60px_rgba(255,255,255,0.08)] disabled:cursor-not-allowed disabled:opacity-70"
+            className="relative z-10 flex h-52 w-52 items-center justify-center rounded-full bg-bone shadow-[0_0_70px_rgba(229,163,61,0.12)] disabled:cursor-not-allowed disabled:opacity-70"
             aria-label={isRecording || isPaused ? "Stop recording" : "Start recording"}
           >
             <AnimatePresence mode="wait">
@@ -121,7 +121,7 @@ export function VoiceRecorder() {
                   {[0, 1, 2].map((i) => (
                     <motion.span
                       key={i}
-                      className="inline-block h-2 w-2 rounded-full bg-black/40"
+                      className="inline-block h-2 w-2 rounded-full bg-base/40"
                       animate={{ opacity: [0.2, 0.8, 0.2] }}
                       transition={{
                         duration: 1.2,
@@ -140,7 +140,7 @@ export function VoiceRecorder() {
                   exit={{ opacity: 0, scale: 0.7 }}
                 >
                   {/* Stop square */}
-                  <Square className="h-8 w-8 fill-black/70 text-black/70" strokeWidth={1.5} />
+                  <Square className="h-8 w-8 fill-base/70 text-base/70" strokeWidth={1.5} />
                 </motion.span>
               ) : (
                 <motion.span
@@ -149,7 +149,7 @@ export function VoiceRecorder() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
                 >
-                  <Mic className="h-9 w-9 text-black/50" strokeWidth={1.5} />
+                  <Mic className="h-9 w-9 text-base/55" strokeWidth={1.5} />
                 </motion.span>
               )}
             </AnimatePresence>
@@ -164,7 +164,7 @@ export function VoiceRecorder() {
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
-              className="font-mono text-xs tracking-widest text-white/35 uppercase"
+              className="kicker text-ember/75"
             >
               Transcribing
             </motion.p>
@@ -174,7 +174,7 @@ export function VoiceRecorder() {
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
-              className="font-mono text-sm tabular-nums text-white/50"
+              className="font-mono text-sm tabular-nums text-bone/60"
             >
               {isPaused ? `Paused at ${formatDuration(duration)}` : formatDuration(duration)}
             </motion.p>
@@ -184,7 +184,7 @@ export function VoiceRecorder() {
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
-              className="font-mono text-xs tracking-widest text-white/30 uppercase"
+              className={`kicker ${error ? "text-clay/80" : "text-ember/80"}`}
             >
               {error ? "Mic access denied" : "Tap to record"}
             </motion.p>
@@ -201,7 +201,7 @@ export function VoiceRecorder() {
             >
               <button
                 onClick={isPaused ? resumeRecording : pauseRecording}
-                className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/10 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-white/45 transition-colors hover:border-white/20 hover:text-white/70"
+                className="inline-flex min-h-11 items-center gap-2 rounded-full border border-bone/10 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-bone/45 transition-colors hover:border-ember/40 hover:text-ember"
               >
                 {isPaused ? <Play className="h-3.5 w-3.5" /> : <Pause className="h-3.5 w-3.5" />}
                 {isPaused ? "Resume" : "Pause"}
@@ -209,7 +209,7 @@ export function VoiceRecorder() {
               {isPaused && (
                 <button
                   onClick={handleButtonClick}
-                  className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/10 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-white/45 transition-colors hover:border-white/20 hover:text-white/70"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-full border border-bone/10 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-bone/45 transition-colors hover:border-ember/40 hover:text-ember"
                 >
                   <Square className="h-3.5 w-3.5 fill-current" />
                   Finish
@@ -239,10 +239,10 @@ export function VoiceRecorder() {
                       key={step.key}
                       className={`rounded-full border px-2 py-1.5 text-center font-mono text-[9px] uppercase tracking-wider ${
                         isDone
-                          ? "border-green-300/20 bg-green-300/10 text-green-200/60"
+                          ? "border-sage/25 bg-sage/10 text-sage/70"
                           : isActive
-                            ? "border-white/20 bg-white/10 text-white/70"
-                            : "border-white/[0.07] bg-white/[0.02] text-white/22"
+                            ? "border-ember/30 bg-ember/12 text-ember"
+                            : "border-bone/[0.07] bg-bone/[0.02] text-bone/22"
                       }`}
                     >
                       {step.label}
@@ -251,7 +251,7 @@ export function VoiceRecorder() {
                 })}
               </div>
               {notice && (
-                <p className="mt-3 text-center text-xs leading-relaxed text-white/40">
+                <p className="mt-3 text-center text-xs leading-relaxed text-bone/40">
                   {notice}
                 </p>
               )}
@@ -265,7 +265,7 @@ export function VoiceRecorder() {
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
-              className="max-w-[280px] text-center text-xs leading-relaxed text-white/40"
+              className="max-w-[280px] text-center text-xs leading-relaxed text-bone/40"
             >
               {notice}
             </motion.p>

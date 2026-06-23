@@ -8,7 +8,7 @@ export function LoadingDots() {
       {[0, 1, 2].map((i) => (
         <motion.span
           key={i}
-          className="inline-block h-1.5 w-1.5 rounded-full bg-white/60"
+          className="inline-block h-1.5 w-1.5 rounded-full bg-bone/60"
           animate={{ opacity: [0.2, 1, 0.2] }}
           transition={{
             duration: 1.2,

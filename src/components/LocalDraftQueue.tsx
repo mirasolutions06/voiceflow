@@ -20,10 +20,10 @@ function statusCopy(draft: LocalDraft, isBusy: boolean) {
 }
 
 function statusClass(draft: LocalDraft, isBusy: boolean) {
-  if (isBusy || draft.status === "transcribing") return "border-amber-300/20 bg-amber-300/10 text-amber-100/60";
-  if (draft.status === "failed") return "border-red-300/20 bg-red-300/10 text-red-100/65";
-  if (draft.status === "ready") return "border-green-300/20 bg-green-300/10 text-green-100/60";
-  return "border-white/10 bg-white/[0.03] text-white/35";
+  if (isBusy || draft.status === "transcribing") return "border-ember/20 bg-ember/10 text-ember/60";
+  if (draft.status === "failed") return "border-clay/20 bg-clay/10 text-clay/65";
+  if (draft.status === "ready") return "border-sage/20 bg-sage/10 text-sage/60";
+  return "border-bone/10 bg-bone/[0.03] text-bone/35";
 }
 
 function draftToTranscriptDraft(draft: LocalDraft): TranscriptDraft {
@@ -90,10 +90,10 @@ export function LocalDraftQueue() {
     <>
       <section className="mx-auto mt-8 w-full max-w-xl">
         <div className="mb-3 flex items-center justify-between">
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/25">
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-bone/25">
             Draft Inbox
           </p>
-          <span className="font-mono text-[10px] text-white/25">
+          <span className="font-mono text-[10px] text-bone/25">
             {unsynced.length}
           </span>
         </div>
@@ -103,12 +103,12 @@ export function LocalDraftQueue() {
             <motion.div
               key={draft.id}
               layout
-              className="rounded-2xl border border-white/[0.07] bg-white/[0.04] p-4"
+              className="rounded-2xl border border-bone/[0.07] bg-bone/[0.04] p-4"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-white/85">{draft.title}</p>
-                  <p className="mt-1 font-mono text-[11px] text-white/30">
+                  <p className="text-sm font-medium text-bone/85">{draft.title}</p>
+                  <p className="mt-1 font-mono text-[11px] text-bone/30">
                     {formatDate(draft.recordedAt)} / {formatDuration(draft.duration)}
                   </p>
                 </div>
@@ -123,13 +123,13 @@ export function LocalDraftQueue() {
               </div>
 
               {draft.error && (
-                <p className="mt-3 rounded-xl border border-red-300/10 bg-red-300/[0.04] px-3 py-2 text-xs leading-relaxed text-red-100/65">
+                <p className="mt-3 rounded-xl border border-clay/10 bg-clay/[0.04] px-3 py-2 text-xs leading-relaxed text-clay/65">
                   {draft.error}
                 </p>
               )}
 
               {draft.transcript && (
-                <p className="mt-3 line-clamp-2 font-mono text-xs leading-relaxed text-white/35">
+                <p className="mt-3 line-clamp-2 font-mono text-xs leading-relaxed text-bone/35">
                   {draft.transcript}
                 </p>
               )}
@@ -139,7 +139,7 @@ export function LocalDraftQueue() {
                   <button
                     onClick={() => retry(draft)}
                     disabled={busyId === draft.id}
-                    className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-white px-3 py-2 text-xs font-medium text-black disabled:opacity-50"
+                    className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-bone px-3 py-2 text-xs font-medium text-base disabled:opacity-50"
                   >
                     <RotateCcw className="h-3.5 w-3.5" />
                     Retry
@@ -148,7 +148,7 @@ export function LocalDraftQueue() {
                 {(draft.status === "ready" || draft.status === "failed") && (
                   <button
                     onClick={() => edit(draft)}
-                    className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-white px-3 py-2 text-xs font-medium text-black"
+                    className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-bone px-3 py-2 text-xs font-medium text-base"
                   >
                     <FilePenLine className="h-3.5 w-3.5" />
                     Review
@@ -156,14 +156,14 @@ export function LocalDraftQueue() {
                 )}
                 <button
                   onClick={() => downloadAudio(draft)}
-                  className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-white/10 px-3 py-2 text-xs text-white/45 hover:text-white/70"
+                  className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-bone/10 px-3 py-2 text-xs text-bone/45 hover:text-bone/70"
                 >
                   <Download className="h-3.5 w-3.5" />
                   Audio
                 </button>
                 <button
                   onClick={() => remove(draft.id)}
-                  className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-white/10 px-3 py-2 text-xs text-white/30 hover:text-white/55"
+                  className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-bone/10 px-3 py-2 text-xs text-bone/30 hover:text-bone/55"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                   Delete

@@ -55,7 +55,7 @@ export function NoteHistory() {
         {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className="h-20 animate-pulse rounded-[20px] bg-white/[0.04]"
+            className="h-20 animate-pulse rounded-[20px] bg-bone/[0.04]"
           />
         ))}
       </div>
@@ -64,7 +64,7 @@ export function NoteHistory() {
 
   if (error) {
     return (
-      <p className="mt-8 text-center font-mono text-xs text-white/30">
+      <p className="mt-8 text-center font-mono text-xs text-bone/30">
         Could not load notes
       </p>
     );
@@ -72,7 +72,7 @@ export function NoteHistory() {
 
   if (notes.length === 0) {
     return (
-      <p className="mt-8 text-center font-mono text-xs text-white/25">
+      <p className="mt-8 text-center font-mono text-xs text-bone/25">
         No notes yet — record your first
       </p>
     );
@@ -82,10 +82,10 @@ export function NoteHistory() {
     <div className="mt-6">
       <div className="mb-4 space-y-3">
         <div className="flex items-center justify-between gap-3">
-          <p className="text-[11px] font-medium uppercase tracking-wider text-white/30">
+          <p className="text-[11px] font-medium uppercase tracking-wider text-bone/30">
             Recent Notes
           </p>
-          <span className="font-mono text-[10px] text-white/25">
+          <span className="font-mono text-[10px] text-bone/25">
             {filteredNotes.length}/{notes.length}
           </span>
         </div>
@@ -95,7 +95,7 @@ export function NoteHistory() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search notes..."
-          className="min-h-12 w-full rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 py-3 text-base text-white placeholder-white/25 outline-none focus:border-white/20"
+          className="min-h-12 w-full rounded-xl border border-bone/[0.08] bg-bone/[0.04] px-4 py-3 text-base text-bone placeholder-bone/25 outline-none focus:border-bone/20"
         />
 
         <div className="flex gap-2 overflow-x-auto pb-1">
@@ -105,8 +105,8 @@ export function NoteHistory() {
               onClick={() => setStatus(option)}
               className={`min-h-11 min-w-11 shrink-0 rounded-full border px-4 py-2 font-mono text-[10px] uppercase tracking-wider ${
                 status === option
-                  ? "border-white/20 bg-white/12 text-white/75"
-                  : "border-white/[0.08] bg-white/[0.03] text-white/32"
+                  ? "border-bone/20 bg-bone/12 text-bone/75"
+                  : "border-bone/[0.08] bg-bone/[0.03] text-bone/32"
               }`}
             >
                 {option}
@@ -120,8 +120,8 @@ export function NoteHistory() {
               onClick={() => setTag("All")}
               className={`min-h-11 min-w-11 shrink-0 rounded-full border px-4 py-2 font-mono text-[10px] uppercase tracking-wider ${
                 tag === "All"
-                  ? "border-white/20 bg-white/12 text-white/75"
-                  : "border-white/[0.08] bg-white/[0.03] text-white/32"
+                  ? "border-bone/20 bg-bone/12 text-bone/75"
+                  : "border-bone/[0.08] bg-bone/[0.03] text-bone/32"
               }`}
             >
               All tags
@@ -132,8 +132,8 @@ export function NoteHistory() {
                 onClick={() => setTag(item)}
                 className={`min-h-11 min-w-11 shrink-0 rounded-full border px-4 py-2 font-mono text-[10px] ${
                   tag === item
-                    ? "border-white/20 bg-white/12 text-white/75"
-                    : "border-white/[0.08] bg-white/[0.03] text-white/32"
+                    ? "border-bone/20 bg-bone/12 text-bone/75"
+                    : "border-bone/[0.08] bg-bone/[0.03] text-bone/32"
                 }`}
               >
                 #{item}
@@ -144,7 +144,7 @@ export function NoteHistory() {
       </div>
 
       {filteredNotes.length === 0 && (
-        <p className="mt-8 text-center font-mono text-xs text-white/25">
+        <p className="mt-8 text-center font-mono text-xs text-bone/25">
           No matching notes
         </p>
       )}

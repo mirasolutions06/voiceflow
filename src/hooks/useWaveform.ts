@@ -23,7 +23,7 @@ export function useWaveform(analyserNode: AnalyserNode | null) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       ctx.lineWidth = 2;
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+      ctx.strokeStyle = "rgba(229, 163, 61, 0.85)";
       ctx.beginPath();
 
       const sliceWidth = canvas.width / bufferLength;

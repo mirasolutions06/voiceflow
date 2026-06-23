@@ -1,39 +1,21 @@
 "use client";
 
 import { VoiceRecorder } from "@/components/VoiceRecorder";
-import { NoteHistory } from "@/components/NoteHistory";
-import { LocalDraftQueue } from "@/components/LocalDraftQueue";
-import { CaptureStatus } from "@/components/CaptureStatus";
+import { BottomSheet } from "@/components/BottomSheet";
+import { TopBar } from "@/components/TopBar";
 
 export default function Home() {
   return (
-    <div className="min-h-dvh bg-[#0a0a0a]">
-      {/* Header */}
-      <header className="flex items-center justify-center pt-12">
-        <p className="font-mono text-[11px] tracking-[0.3em] text-white/25 uppercase">
-          VoiceFlow
-        </p>
-      </header>
+    <div className="relative flex h-dvh flex-col overflow-hidden">
+      <TopBar />
 
-      {/* Hero — recorder centered in upper portion of screen */}
-      <div className="flex min-h-[62dvh] flex-col items-center justify-center px-6">
+      {/* Center stage — recorder is the hero, always on screen */}
+      <main className="flex flex-1 flex-col items-center justify-center px-6 pb-28">
         <VoiceRecorder />
-        <CaptureStatus />
-      </div>
+      </main>
 
-      {/* History zone */}
-      <div className="px-5 pb-12">
-        <LocalDraftQueue />
-
-        <div className="mb-5 flex items-center gap-3">
-          <div className="h-px flex-1 bg-white/[0.06]" />
-          <span className="font-mono text-[10px] tracking-[0.25em] text-white/25 uppercase">
-            Recent
-          </span>
-          <div className="h-px flex-1 bg-white/[0.06]" />
-        </div>
-        <NoteHistory />
-      </div>
+      {/* Notes live in a pull-up sheet, not a scrolling page */}
+      <BottomSheet />
     </div>
   );
 }
